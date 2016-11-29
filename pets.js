@@ -75,6 +75,34 @@ switch (cmd)
             console.error(`Usage: ${node} ${file} destroy INDEX`);
             process.exit(1);
         }
+        fs.readFile(petsPath, 'utf8', function(readErr, data)
+        {
+            if (readErr)
+            {
+                throw readErr;
+            }
+            let pets = JSON.parse(data);
+            if (!pets[index])
+            {
+                console.error("Error: No such index");
+                process.exit(1);
+            }
+            console.log(pets[index].name + " the " + pets[index].kind +
+                " will be removed\n............................done"
+            );
+            pets.splice(index, 1);
+            console.log(pets);
+            let petsJSON = JSON.stringify(pets);
+
+            fs.writeFile(petsPath, petsJSON, function(writeErr)
+            {
+                if (writeErr)
+                {
+                    throw writeErr;
+                }
+            });
+
+        });
         break;
     case 'update':
         break;
