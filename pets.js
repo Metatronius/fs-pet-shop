@@ -1,3 +1,5 @@
+#!
+
 'use strict ';
 
 var fs = require('fs');
@@ -87,11 +89,8 @@ switch (cmd)
                 console.error("Error: No such index");
                 process.exit(1);
             }
-            console.log(pets[index].name + " the " + pets[index].kind +
-                " will be removed\n............................done"
-            );
+            console.log(pets[index]);
             pets.splice(index, 1);
-            console.log(pets);
             let petsJSON = JSON.stringify(pets);
 
             fs.writeFile(petsPath, petsJSON, function(writeErr)
@@ -105,6 +104,40 @@ switch (cmd)
         });
         break;
     case 'update':
+        let index = process.argv[3],
+            age = +process.argv[4],
+            kind = process.argv[5],
+            name = process.argv[6];
+        if (!name || isNaN(index))
+        {
+            console.error(`Usage: ${node} ${file} update INDEX AGE KIND NAME`);
+            process.exit(1);
+        }
+        fs.readFile(petsPath, 'utf8', function(readErr, data)
+        {
+            if (readErr)
+            {
+                throw readErr;
+            }
+            let pets = JSON.parse(data);
+            if (!pets[index])
+            {
+                console.error("Error: No such index");
+                process.exit(1);
+            }
+            console.log(pets[index]);
+            pets.splice(index, 1);
+            let petsJSON = JSON.stringify(pets);
+
+            fs.writeFile(petsPath, petsJSON, function(writeErr)
+            {
+                if (writeErr)
+                {
+                    throw writeErr;
+                }
+            });
+
+        });
         break;
     default:
         console.error(
